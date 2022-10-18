@@ -14,6 +14,13 @@ export const CustomEditor = {
     });
     return !!match;
   },
+  isUnderlineMarkActive(editor: Editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (node: Node) => Text.isText(node) && node.underline === true,
+      universal: true,
+    });
+    return !!match;
+  },
   toggleBoldMark(editor: Editor) {
     const isActive = CustomEditor.isBoldMarkActive(editor);
     Transforms.setNodes(
@@ -31,6 +38,17 @@ export const CustomEditor = {
       editor,
       { type: isActive ? "paragraph" : "code" },
       { match: (node: Node) => Editor.isBlock(editor, node) }
+    );
+  },
+  toggleUnderline(editor: Editor) {
+    const isActive = CustomEditor.isUnderlineMarkActive(editor);
+    Transforms.setNodes(
+      editor,
+      { underline: isActive ? false : true },
+      {
+        match: (node: Node) => Text.isText(node),
+        split: true,
+      }
     );
   },
 };

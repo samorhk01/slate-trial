@@ -13,11 +13,14 @@ export const DefaultElement = (props: RenderElementProps) => {
   return <p {...props.attributes}>{props.children}</p>;
 };
 
-export const BoldElement = (props: RenderLeafProps) => {
+export const Leafs = (props: RenderLeafProps) => {
   return (
     <span
       {...props.attributes}
-      style={{ fontWeight: props.leaf.bold ? "bold" : "normal" }}
+      style={{
+        fontWeight: props.leaf.bold ? "bold" : "normal",
+        textDecoration: props.leaf.underline ? "underline" : "none",
+      }}
     >
       {props.children}
     </span>

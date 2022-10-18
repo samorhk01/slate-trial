@@ -1,5 +1,5 @@
 // Import React dependencies.
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 // Import the Slate editor factory.
 import { createEditor, BaseEditor, Descendant } from "slate";
 // Import the Slate components and React plugin.
@@ -12,14 +12,8 @@ import {
   RenderLeafProps,
 } from "slate-react";
 
-//isHotkey import for keydown events
-import isHotkey from "is-hotkey";
 import AndSymbolEncode from "./Plugins/AndFunction";
-import {
-  BoldElement,
-  CodeElement,
-  DefaultElement,
-} from "./Plugins/StyleElement";
+import { CodeElement, DefaultElement, Leafs } from "./Plugins/StyleElement";
 import CodeBlockKey from "./Plugins/CodeBlockFunction";
 import BoldParagraph from "./Plugins/BoldParagraph";
 
@@ -41,12 +35,104 @@ declare module "slate" {
 
 function App() {
   //the initial value inside the editor
-  const initVal: Descendant[] = [
-    {
-      type: "paragraph",
-      children: [{ text: "A line of text in a paragraph." }],
-    },
-  ];
+  const initialValue = useMemo(
+    () =>
+      JSON.parse(localStorage.getItem("content") as string) || [
+        {
+          type: "code",
+          children: [
+            {
+              text: "This is my New Statement.",
+            },
+          ],
+        },
+        {
+          type: "code",
+          children: [
+            {
+              text: "",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "This is a Paragraph.",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "This is ",
+            },
+            {
+              text: "Bold",
+              bold: true,
+            },
+            {
+              text: ".",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "This is ",
+            },
+            {
+              text: "Underline",
+              underline: true,
+              bold: false,
+            },
+            {
+              text: ".",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "",
+            },
+          ],
+        },
+        {
+          type: "code",
+          children: [
+            {
+              text: "This is ",
+            },
+            {
+              text: "ALL.",
+              bold: true,
+              underline: true,
+            },
+          ],
+        },
+      ],
+    []
+  );
   //Constructing the editor
   const [editor] = useState(() => withReact(createEditor()));
 
@@ -63,11 +149,25 @@ function App() {
   }, []);
 
   const renderLeaf = useCallback((props: RenderLeafProps) => {
-    return <BoldElement {...props} />;
+    return <Leafs {...props} />;
   }, []);
 
   return (
-    <Slate editor={editor} value={initVal}>
+    <Slate
+      editor={editor}
+      value={initialValue}
+      onChange={(value) => {
+        console.log("changes");
+        const isAstChange = editor.operations.some((op) => {
+          return "set_selection" !== op.type;
+        });
+        if (isAstChange) {
+          // Save the value to Local Storage.
+          const content = JSON.stringify(value);
+          localStorage.setItem("content", content);
+        }
+      }}
+    >
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}

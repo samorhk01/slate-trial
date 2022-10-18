@@ -10,4 +10,8 @@ export default function BoldParagraph(
     event.preventDefault();
     CustomEditor.toggleBoldMark(editor);
   }
+  if (event.key === "u") {
+    event.preventDefault();
+    CustomEditor.toggleUnderline(editor);
+  }
 }
