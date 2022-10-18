@@ -14,7 +14,6 @@ export const DefaultElement = (props: RenderElementProps) => {
 };
 
 export const BoldElement = (props: RenderLeafProps) => {
-  console.log(props.leaf.bold);
   return (
     <span
       {...props.attributes}

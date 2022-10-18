@@ -1,5 +1,6 @@
 import { Node, Text, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
+import { CustomEditor } from "./Helpers";
 
 export default function BoldParagraph(
   event: React.KeyboardEvent,
@@ -7,14 +8,6 @@ export default function BoldParagraph(
 ) {
   if (event.key === "b") {
     event.preventDefault();
-    Transforms.setNodes(
-      editor,
-      { bold: true },
-      //split it when the selection is part of the node inside the editor
-      {
-        match: (node: Node) => Text.isText(node),
-        split: true,
-      }
-    );
+    CustomEditor.toggleBoldMark(editor);
   }
 }

@@ -1,5 +1,6 @@
 import { Editor, Element, Node, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
+import { CustomEditor } from "./Helpers";
 
 export default function CodeBlockKey(
   event: React.KeyboardEvent,
@@ -10,18 +11,6 @@ export default function CodeBlockKey(
   if (event.key === "`") {
     // Prevent the "`" from being inserted by default.
     event.preventDefault();
-    console.log("pressed");
-    const [match] = Editor.nodes(editor, {
-      match: (node: Node) => {
-        return Element.isElement(node) && node.type === "code";
-      },
-    });
-    console.log(match);
-    // Otherwise, set the currently selected blocks type to "code".
-    Transforms.setNodes(
-      editor,
-      { type: match ? "paragraph" : "code" },
-      { match: (n) => Editor.isBlock(editor, n) }
-    );
+    CustomEditor.toggleCodeBlock(editor);
   }
 }
