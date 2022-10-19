@@ -1,4 +1,3 @@
-import { Editor, Element, Node, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { CustomEditor } from "./Helpers";
 
@@ -12,5 +11,10 @@ export default function CodeBlockKey(
     // Prevent the "`" from being inserted by default.
     event.preventDefault();
     CustomEditor.toggleCodeBlock(editor);
+  }
+  if (event.key === "l") {
+    console.log("l pressed");
+    event.preventDefault();
+    CustomEditor.toggleLink(editor);
   }
 }

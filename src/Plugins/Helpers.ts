@@ -1,3 +1,4 @@
+import { url } from "inspector";
 import { Editor, Element, Node, Text, Transforms } from "slate";
 
 export const CustomEditor = {
@@ -11,6 +12,13 @@ export const CustomEditor = {
   isCodeBlockActive(editor: Editor) {
     const [match] = Editor.nodes(editor, {
       match: (node: Node) => Element.isElement(node) && node.type === "code",
+    });
+    return !!match;
+  },
+  isLinkActive(editor: Editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (node: Node) => Text.isText(node) && node.link === true,
+      universal: true,
     });
     return !!match;
   },
@@ -37,7 +45,24 @@ export const CustomEditor = {
     Transforms.setNodes(
       editor,
       { type: isActive ? "paragraph" : "code" },
-      { match: (node: Node) => Editor.isBlock(editor, node) }
+      {
+        match: (node: Node) => Editor.isBlock(editor, node),
+      }
+    );
+  },
+  toggleLink(editor: Editor) {
+    const isActive = CustomEditor.isLinkActive(editor);
+    let url = undefined;
+    if (!isActive) {
+      url = prompt("Enter Url Here") || undefined;
+    }
+    Transforms.setNodes(
+      editor,
+      {
+        link: isActive ? false : true,
+        urlLink: isActive ? undefined : url,
+      },
+      { match: (node: Node) => Text.isText(node), split: true }
     );
   },
   toggleUnderline(editor: Editor) {

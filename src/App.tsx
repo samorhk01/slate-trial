@@ -24,6 +24,8 @@ type CustomText = {
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;
+  link?: boolean;
+  urlLink?: string;
 };
 declare module "slate" {
   interface CustomTypes {
@@ -130,6 +132,59 @@ function App() {
             },
           ],
         },
+        {
+          type: "code",
+          children: [
+            {
+              bold: true,
+              underline: true,
+              text: "",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              bold: false,
+              underline: false,
+              text: "Hi i am using ",
+            },
+            {
+              bold: false,
+              underline: false,
+              text: "Facebook",
+              link: true,
+              urlLink: "https://facebook.com",
+            },
+            {
+              bold: false,
+              underline: false,
+              text: " to social network ",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              bold: false,
+              underline: false,
+              text: "Google ",
+              link: true,
+              url: "https://www.google.com/",
+              urlLink: "https://www.google.com/",
+            },
+            {
+              bold: false,
+              underline: false,
+              link: true,
+              url: "https://www.google.com/",
+              text: "Twitter ",
+              urlLink: "https://twitter.com",
+            },
+          ],
+        },
       ],
     []
   );
@@ -157,11 +212,11 @@ function App() {
       editor={editor}
       value={initialValue}
       onChange={(value) => {
-        console.log("changes");
         const isAstChange = editor.operations.some((op) => {
           return "set_selection" !== op.type;
         });
         if (isAstChange) {
+          console.log("value", value);
           // Save the value to Local Storage.
           const content = JSON.stringify(value);
           localStorage.setItem("content", content);
@@ -177,6 +232,7 @@ function App() {
           CodeBlockKey(event, editor);
           BoldParagraph(event, editor);
         }}
+        style={{ background: "lightGrey" }}
       />
     </Slate>
   );
